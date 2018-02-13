@@ -61,20 +61,20 @@ parser.add_argument('-q', type=str,
                     metavar='QoS style',
                     help='custom/default use custom or default qos settings')
 parser.add_argument('-n', type=int,
-                    choices=range(50, 6000),
+                    choices=range(50, 15001),
                     required=False,
                     metavar='min QoS',
-                    help='min QoS between 50 and 6000')
+                    help='min QoS between 50 and 15000')
 parser.add_argument('-x', type=int,
-                    choices=range(100, 20000),
+                    choices=range(100, 200001),
                     required=False,
                     metavar='max QoS',
-                    help='max QoS between 100 and 20000')
+                    help='max QoS between 100 and 200000')
 parser.add_argument('-b', type=int,
-                    choices=range(100, 20000),
+                    choices=range(100, 200001),
                     required=False,
                     metavar='burst QoS',
-                    help='burst QoS between 100 and 20000')
+                    help='burst QoS between 100 and 200000')
 args = parser.parse_args()
 
 # Write the submitted info out to the file
