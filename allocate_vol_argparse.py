@@ -1,5 +1,7 @@
 # !/usr/bin/python
-# author: Scott Chubb
+# Author: Scott Chubb scott.chubb@netapp.com
+# Written for Python 3.4 and above
+# No warranty is offered, use at your own risk.  While these scripts have been tested in lab situations, all use cases cannot be accounted for.
 # date: 20-Dec-2017
 # PEP8 compliance reviewed 22-Jan-2018
 # This script is a volume allocation script for automation of volume

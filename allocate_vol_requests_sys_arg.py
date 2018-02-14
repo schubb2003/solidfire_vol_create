@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 # Author: Scott Chubb scott.chubb@netapp.com
 # Written for Python 3.4 and above
+# No warranty is offered, use at your own risk.  While these scripts have been tested in lab situations, all use cases cannot be accounted for.
 # Date: 13-Feb-2018
 # This scripts shows how to gather volume information on volumeID 1 using requests and web calls
 # output is in JSON formatted text.  This can be modified to be used in a more iterative fashion 

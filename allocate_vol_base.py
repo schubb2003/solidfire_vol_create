@@ -1,4 +1,7 @@
 #!/usr/local/bin/python
+# Author: Scott Chubb scott.chubb@netapp.com
+# Written for Python 3.4 and above
+# No warranty is offered, use at your own risk.  While these scripts have been tested in lab situations, all use cases cannot be accounted for.
 # This script assumes that an account named account1 exists
 # It finds said account and creates a volume named account1-volume1
 # It sets a size of 1GB not 1GiB with 512 block emulation disabled

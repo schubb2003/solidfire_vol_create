@@ -1,4 +1,7 @@
 #!/usr/local/bin/python
+# Author: Scott Chubb scott.chubb@netapp.com
+# Written for Python 3.4 and above
+# No warranty is offered, use at your own risk.  While these scripts have been tested in lab situations, all use cases cannot be accounted for.
 # It takes arguments from the command line to configure inputs
 # usage: python allocate_vol_argument.py <MVIP> <USER> <PASSWORD> <ACCOUNT> <VOLUME_NAME> <VOL_SIZE> <512enabled false|true> <MIN_QOS> <MAX_QOS> <BURST_QOS>
 # This script looks for the provided account and creates a volume named <VOLUME_NAME>
