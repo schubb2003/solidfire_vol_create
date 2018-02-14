@@ -68,6 +68,12 @@ auth = (user_name + ":" + user_pass)
 encodeKey = base64.b64encode(auth.encode('utf-8'))
 basicAuth = bytes.decode(encodeKey)
 
+headers = {
+    'Content-Type': "application/json",
+    'Authorization': "Basic %s" % basicAuth,
+    'Cache-Control': "no-cache",
+    }
+
 # Be certain of your API version path here
 url = "https://" + mvip_ip + "/json-rpc/9.0"
 
@@ -97,14 +103,6 @@ payload = "{" + \
                 "\n    }," + \
                 "\n    \"id\": 1" + \
             "\n}"
-
-
-headers = {
-    'Content-Type': "application/json",
-    'Authorization': "Basic %s" % basicAuth,
-    'Cache-Control': "no-cache",
-    }
-
 
 response = requests.request("POST", url, data=payload, headers=headers, verify=False)
 
