@@ -14,49 +14,53 @@ from solidfire.factory import ElementFactory
 # it is not required to get/print QoS information
 from solidfire.models import QoS
 
-# Web/REST auth credentials build authentication
-auth = ("admin:Netapp1!")
-encodeKey = base64.b64encode(auth.encode('utf-8'))
-basicAuth = bytes.decode(encodeKey)
+def main():
+    # Web/REST auth credentials build authentication
+    auth = ("admin:Netapp1!")
+    encodeKey = base64.b64encode(auth.encode('utf-8'))
+    basicAuth = bytes.decode(encodeKey)
 
-headers = {
-    'Content-Type': "application/json",
-    'Authorization': "Basic %s" % basicAuth,
-    'Cache-Control': "no-cache",
-    }
+    headers = {
+        'Content-Type': "application/json",
+        'Authorization': "Basic %s" % basicAuth,
+        'Cache-Control': "no-cache",
+        }
 
-# Be certain of your API version path here
-url = "https://sf-mvip/json-rpc/9.0"
+    # Be certain of your API version path here
+    url = "https://sf-mvip/json-rpc/9.0"
 
-# Various payload params in one liner
-# payload = "{\r    \"method\": \"CreateVolume\",\r    
-#               \"params\": {\r        \"name\": \"<Volume Name>\",\r        
-#               \"accountID\": <Account ID>,\r        \"totalSize\": <Volume Size in Bytes>,\r        
-#               \"enable512e\": <Optional Boolean true or false>,\r        \"attributes\": {},\r        
-#               \"qos\": {\r            \"minIOPS\": <Optional Minimum IOPS>,\r        
-#               \"maxIOPS\": <Optional Maximum IOPS>,\r            \"burstIOPS\": <Optional Burst IOPS>,\r        
-#               \"burstTime\": 60\r        }\r    },\r    \"id\": 1\r}"
-# payload in JSON multi-line
-payload = "{" + \
-                "\n  \"method\": \"CreateVolume\"," + \
-                "\n    \"params\": {" + \
-                "\n    \t\"name\": \"new-volume\"," + \
-                "\n    \t\"accountID\": 1," + \
-                "\n    \t\"totalSize\": 1073741824," + \
-                "\n    \t\"enable512e\": false," + \
-                "\n    \t\"attributes\": {}," + \
-                "\n    \t\"qos\": {" + \
-                "\n    \t    \"minIOPS\": 150," + \
-                "\n    \t    \"maxIOPS\": 350," + \
-                "\n    \t    \"burstIOPS\": 550," + \
-                "\n    \t    \"burstTime\": 60" + \
-                "\n    \t}" +\
-                "\n    }," + \
-                "\n    \"id\": 1" + \
-            "\n}"
+    # Various payload params in one liner
+    # payload = "{\r    \"method\": \"CreateVolume\",\r    
+    #               \"params\": {\r        \"name\": \"<Volume Name>\",\r        
+    #               \"accountID\": <Account ID>,\r        \"totalSize\": <Volume Size in Bytes>,\r        
+    #               \"enable512e\": <Optional Boolean true or false>,\r        \"attributes\": {},\r        
+    #               \"qos\": {\r            \"minIOPS\": <Optional Minimum IOPS>,\r        
+    #               \"maxIOPS\": <Optional Maximum IOPS>,\r            \"burstIOPS\": <Optional Burst IOPS>,\r        
+    #               \"burstTime\": 60\r        }\r    },\r    \"id\": 1\r}"
+    # payload in JSON multi-line
+    payload = "{" + \
+                    "\n  \"method\": \"CreateVolume\"," + \
+                    "\n    \"params\": {" + \
+                    "\n    \t\"name\": \"new-volume\"," + \
+                    "\n    \t\"accountID\": 1," + \
+                    "\n    \t\"totalSize\": 1073741824," + \
+                    "\n    \t\"enable512e\": false," + \
+                    "\n    \t\"attributes\": {}," + \
+                    "\n    \t\"qos\": {" + \
+                    "\n    \t    \"minIOPS\": 150," + \
+                    "\n    \t    \"maxIOPS\": 350," + \
+                    "\n    \t    \"burstIOPS\": 550," + \
+                    "\n    \t    \"burstTime\": 60" + \
+                    "\n    \t}" +\
+                    "\n    }," + \
+                    "\n    \"id\": 1" + \
+                "\n}"
 
-response = requests.request("POST", url, data=payload, headers=headers, verify=False)
+    response = requests.request("POST", url, data=payload, headers=headers, verify=False)
 
-raw = json.loads(response.text)
+    raw = json.loads(response.text)
 
-print(json.dumps(raw, indent=4, sort_keys=True))
+    print(json.dumps(raw, indent=4, sort_keys=True))
+
+if __name__ == "__main__"
+    main()

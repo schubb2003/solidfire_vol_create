@@ -27,27 +27,31 @@ else:
     min_qos = int(sys.argv[8])
     max_qos = int(sys.argv[9])
     burst_qos = int(sys.argv[10])
-    
-# Create connection to SF Cluster
-sfe = ElementFactory.create(mvip_conn, user_name, user_pass,print_ascii_art=False)
 
-# --------- EXAMPLE 1 - Existing ACCOUNT -----------
-# Send the request with required parameters and gather the result
-#	add_account_result = sfe.add_account(username="account1")
-list_accounts_result = sfe.list_accounts()
+def main():
+    # Create connection to SF Cluster
+    sfe = ElementFactory.create(mvip_conn, user_name, user_pass,print_ascii_art=False)
 
-# Pull the account ID from the result object
-for account in list_accounts_result.accounts:
-    if account.username == account_name: 
-        acc_id = account.account_id
+    # --------- EXAMPLE 1 - Existing ACCOUNT -----------
+    # Send the request with required parameters and gather the result
+    #	add_account_result = sfe.add_account(username="account1")
+    list_accounts_result = sfe.list_accounts()
 
-# --------- EXAMPLE 2 - CREATE A VOLUME -------------
-# Create a new QoS object for the volume
-qos = QoS(burst_iops=burst_qos, max_iops=max_qos, min_iops=min_qos)
+    # Pull the account ID from the result object
+    for account in list_accounts_result.accounts:
+        if account.username == account_name: 
+            acc_id = account.account_id
 
-# Send the request with required parameters and gather the result
-create_volume_result = sfe.create_volume(name=volume_name,
-                                         account_id=acc_id,
-                                         total_size=volume_size,
-                                         enable512e=enable_512e,
-                                         qos=qos)
+    # --------- EXAMPLE 2 - CREATE A VOLUME -------------
+    # Create a new QoS object for the volume
+    qos = QoS(burst_iops=burst_qos, max_iops=max_qos, min_iops=min_qos)
+
+    # Send the request with required parameters and gather the result
+    create_volume_result = sfe.create_volume(name=volume_name,
+                                             account_id=acc_id,
+                                             total_size=volume_size,
+                                             enable512e=enable_512e,
+                                             qos=qos)
+
+if __name__ == "__main__"
+    main()

@@ -107,37 +107,41 @@ if len(volName) > 64:
     fh.close()
     sys.exit(1)
 
-# Connect to SF cluster
-sfe = ElementFactory.create(sfMVIP, sfUser, sfPass)
+def main():
+    # Connect to SF cluster
+    sfe = ElementFactory.create(sfMVIP, sfUser, sfPass)
 
-# Verify account exists
-check_account = sfe.list_accounts(acct_ID)
-if len(check_account.accounts) == 0:
-    fh.write("Submitted account ID does not exist")
-    fh.close()
-    sys.exit(1)
-
-# Check for duplicate volume name
-vol_check = sfe.list_volumes()
-for vol in vol_check.volumes:
-    if vol.name == volName:
-        fh.write("duplicate volume name detected, script will exit")
+    # Verify account exists
+    check_account = sfe.list_accounts(acct_ID)
+    if len(check_account.accounts) == 0:
+        fh.write("Submitted account ID does not exist")
         fh.close()
         sys.exit(1)
 
-# Actually do the work
-if args.q == "custom":
-    sfe.create_volume(volName,
-                      acct_ID,
-                      vol_size,
-                      enable512e,
-                      qos=qos)
-elif args.q == "default":
-    sfe.create_volume(volName,
-                      acct_ID,
-                      vol_size,
-                      enable512e)
-else:
-    fh.write("Unhandled exception has occurred.")
-    fh.close()
-    sys.exit(1)
+    # Check for duplicate volume name
+    vol_check = sfe.list_volumes()
+    for vol in vol_check.volumes:
+        if vol.name == volName:
+            fh.write("duplicate volume name detected, script will exit")
+            fh.close()
+            sys.exit(1)
+
+    # Actually do the work
+    if args.q == "custom":
+        sfe.create_volume(volName,
+                          acct_ID,
+                          vol_size,
+                          enable512e,
+                          qos=qos)
+    elif args.q == "default":
+        sfe.create_volume(volName,
+                          acct_ID,
+                          vol_size,
+                          enable512e)
+    else:
+        fh.write("Unhandled exception has occurred.")
+        fh.close()
+        sys.exit(1)
+
+if __name__ == "__main__"
+    main()
