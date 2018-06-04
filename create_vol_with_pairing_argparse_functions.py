@@ -241,7 +241,7 @@ def main():
                               "DBVersionMismatch encountered, "
                               "retrying pair completion"
                               "\n##########")
-                        remove_vol_pair(srv_vol_id)
+                        remove_vol_pair(src_vol_id)
                         start_pair_vols(src_vol_id, vol_repl)
                         complete_pair_vols(pair_key, dst_vol_id)
 
