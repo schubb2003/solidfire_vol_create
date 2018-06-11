@@ -26,6 +26,14 @@ cookedtime = mediumtime.replace('-', '_')
 # Open output file
 fh = open(cookedtime, "w")
 
+def enforceVolNaming(vol_name):
+    try:
+        return re.match("^[a-zA-Z1-9][a-zA-Z1-9-]{1,63}[a-zA-Z1-9]$", vol_name).group(0)
+    except:
+        raise argparse.ArgumentTypeError("\nString {} does not match required format, ensure there are no special characters,"
+                                         " that it is between 1 and 64 characters in length, and that no '-' exists at the start"
+                                         " or end of the volume".format(vol_name,))
+
 # Set vars for connectivity using argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', type=str,
@@ -40,7 +48,7 @@ parser.add_argument('-p', type=str,
                     required=True,
                     metavar='password',
                     help='password for user')
-parser.add_argument('-v', type=str,
+parser.add_argument('-v', type=enforceVolNaming,
                     required=True,
                     metavar='volume',
                     help='volume name, no "_", 1 to 64 characters in length')
@@ -83,13 +91,13 @@ args = parser.parse_args()
 fh.write(args)
 
 # Take input and create new vars
-sfMVIP = args.m
-sfUser = args.u
-sfPass = args.p
-volName = args.v
-acct_ID = args.a
+src_mvip = args.m
+src_user = args.u
+src_pass = args.p
+vol_name = args.v
+vol_acct = args.a
 vol_size = args.s
-enable512e = args.e
+vol_512e = args.e
 
 # QoS, if requested
 if args.q == "custom":
@@ -101,18 +109,18 @@ if args.q == "custom":
               min_iops=minQoS)
 
 # Verify all variable inputs are valid and within boundaries
-if len(volName) > 64:
+if len(vol_name) > 64:
     fh.write("Vol name exceeds character limit of 64. "
-             "\n\tRequested length is %d" % len(volName))
+             "\n\tRequested length is %d" % len(vol_name))
     fh.close()
     sys.exit(1)
 
 def main():
     # Connect to SF cluster
-    sfe = ElementFactory.create(sfMVIP, sfUser, sfPass)
+    sfe = ElementFactory.create(src_mvip, src_user, src_pass)
 
     # Verify account exists
-    check_account = sfe.list_accounts(acct_ID)
+    check_account = sfe.list_accounts(vol_acct)
     if len(check_account.accounts) == 0:
         fh.write("Submitted account ID does not exist")
         fh.close()
@@ -121,23 +129,23 @@ def main():
     # Check for duplicate volume name
     vol_check = sfe.list_volumes()
     for vol in vol_check.volumes:
-        if vol.name == volName:
+        if vol.name == vol_name:
             fh.write("duplicate volume name detected, script will exit")
             fh.close()
             sys.exit(1)
 
     # Actually do the work
     if args.q == "custom":
-        sfe.create_volume(volName,
-                          acct_ID,
+        sfe.create_volume(vol_name,
+                          vol_acct,
                           vol_size,
-                          enable512e,
+                          vol_512e,
                           qos=qos)
     elif args.q == "default":
-        sfe.create_volume(volName,
-                          acct_ID,
+        sfe.create_volume(vol_name,
+                          vol_acct,
                           vol_size,
-                          enable512e)
+                          vol_512e)
     else:
         fh.write("Unhandled exception has occurred.")
         fh.close()

@@ -16,6 +16,14 @@ from solidfire.factory import ElementFactory
 # it is not required to get/print QoS information
 from solidfire.models import QoS
 
+def enforceVolNaming(vol_name):
+    try:
+        return re.match("^[a-zA-Z1-9][a-zA-Z1-9-]{1,63}[a-zA-Z1-9]$", vol_name).group(0)
+    except:
+        raise argparse.ArgumentTypeError("\nString {} does not match required format, ensure there are no special characters,"
+                                         " that it is between 1 and 64 characters in length, and that no '-' exists at the start"
+                                         " or end of the volume".format(vol_name,))
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', type=str,
                     required=True,
@@ -29,13 +37,13 @@ parser.add_argument('-p', type=str,
                     required=True,
                     metavar='password',
                     help='password for user')
-parser.add_argument('-v', type=str,
+parser.add_argument('-v', type=enforceVolNaming,
                     required=True,
                     metavar='vol_name',
                     help='volume name')
 parser.add_argument('-i', type=int,
                     required=True,
-                    metavar='acct_id',
+                    metavar='vol_acct',
                     help='account ID to attach')
 parser.add_argument('-s', type=int,
                     required=True,
@@ -44,7 +52,7 @@ parser.add_argument('-s', type=int,
 parser.add_argument('-e', type=str,
                     required=True,
                     choices=['true', 'false'],
-                    metavar='enable512e',
+                    metavar='vol_512e',
                     help='enable 512 block emulation')
 parser.add_argument('-n', type=int,
                     choices=range(50, 15001),
@@ -67,9 +75,9 @@ mvip_ip = args.m
 user_name = args.u
 user_pass = args.p
 vol_name = args.v
-acct_id = args.i
+vol_acct = args.i
 vol_size = args.s
-enable512e = (args.e).lower()
+vol_512e = (args.e).lower()
 min_qos = args.n
 max_qos = args.x
 burst_qos = args.b
@@ -78,7 +86,7 @@ def main():
     if vol_size < 1000000000 or vol_size > 8796093022208:
         sys.exit("volume size is either less than 1GB or more than 8TiB")
 
-    if enable512e != "true" and enable512e != "false":
+    if vol_512e != "true" and vol_512e != "false":
         sys.exit("512 emulation must be either true or false")
 
     if max_qos > 15000 or max_qos < 100 or max_qos < min_qos:
@@ -109,7 +117,7 @@ def main():
     # payload = "{\r    \"method\": \"CreateVolume\",\r    
     #               \"params\": {\r        \"name\": \"<Volume Name>\",\r        
     #               \"accountID\": <Account ID>,\r        \"totalSize\": <Volume Size in Bytes>,\r        
-    #               \"enable512e\": <Optional Boolean true or false>,\r        \"attributes\": {},\r        
+    #               \"vol_512e\": <Optional Boolean true or false>,\r        \"attributes\": {},\r        
     #               \"qos\": {\r            \"minIOPS\": <Optional Minimum IOPS>,\r        
     #               \"maxIOPS\": <Optional Maximum IOPS>,\r            \"burstIOPS\": <Optional Burst IOPS>,\r        
     #               \"burstTime\": 60\r        }\r    },\r    \"id\": 1\r}"
@@ -118,9 +126,9 @@ def main():
                     "\n  \"method\": \"CreateVolume\"," + \
                     "\n    \"params\": {" + \
                     "\n    \t\"name\": \"" + str(vol_name) + "\"," + \
-                    "\n    \t\"accountID\": \"" + str(acct_id) + "\"," + \
+                    "\n    \t\"accountID\": \"" + str(vol_acct) + "\"," + \
                     "\n    \t\"totalSize\": " + str(vol_size) + "," + \
-                    "\n    \t\"enable512e\": \"" + str(enable512e) + "\"," + \
+                    "\n    \t\"vol_512e\": \"" + str(vol_512e) + "\"," + \
                     "\n    \t\"attributes\": {}," + \
                     "\n    \t\"qos\": {" + \
                     "\n    \t    \"minIOPS\": " + str(min_qos) + "," + \
