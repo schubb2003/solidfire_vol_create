@@ -22,7 +22,7 @@ def main():
     # Pull the account ID from the result object
     for account in list_accounts_result.accounts:
         if account.username == 'account1': 
-            acc_id = account.account_id
+            vol_acct = account.account_id
 
     # --------- EXAMPLE 2 - CREATE A VOLUME -------------
     # Create a new QoS object for the volume
@@ -30,7 +30,7 @@ def main():
 
     # Send the request with required parameters and gather the result
     create_volume_result = sfe.create_volume(name="account1-volume1",
-                                             account_id=acc_id,
+                                             account_id=vol_acct,
                                              total_size=1000000000,
                                              enable512e=False,
                                              qos=qos)
