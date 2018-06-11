@@ -5,7 +5,7 @@ from solidfire.factory import ElementFactory
 import time
 import sys
 import argparse
-
+import re
 
 def create_src_vol(new_vol, vol_acct, vol_size, vol_512e):
     """
@@ -105,6 +105,13 @@ def check_repl_status():
                 print("{} minutes and {} seconds elapsed, "
                       "\n\ttotal seconds were {}".format(min, sec, t))
 
+def enforceVolNaming(vol_name):
+    try:
+        return re.match("^[a-zA-Z1-9][a-zA-Z1-9-]{1,63}[a-zA-Z1-9]$", vol_name).group(0)
+    except:
+        raise argparse.ArgumentTypeError("\nString {} does not match required format, ensure there are no special characters,"
+                                         " that it is between 1 and 64 characters in length, and that no '-' exists at the start"
+                                         " or end of the volume".format(vol_name,))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-sm', type=str,
@@ -131,7 +138,7 @@ parser.add_argument('-dp', type=str,
                     required=True,
                     metavar='dpassword',
                     help='Destinationpassword for user')
-parser.add_argument('-v', type=str,
+parser.add_argument('-v', type=enforceVolNaming,
                     required=True,
                     metavar='volume',
                     help='volume name, no "_", 1 to 64 characters in length')
