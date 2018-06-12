@@ -25,15 +25,15 @@ def enforceVolNaming(vol_name):
                                          " or end of the volume".format(vol_name,))
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-m', type=str,
+parser.add_argument('-sm', type=str,
                     required=True,
                     metavar='mvip',
                     help='MVIP/node name or IP')
-parser.add_argument('-u', type=str,
+parser.add_argument('-su', type=str,
                     required=True,
                     metavar='username',
                     help='username to connect with')
-parser.add_argument('-p', type=str,
+parser.add_argument('-sp', type=str,
                     required=True,
                     metavar='password',
                     help='password for user')
@@ -71,9 +71,9 @@ parser.add_argument('-b', type=int,
                     help='burst QoS, between max and 200,000')
 args = parser.parse_args()
 
-mvip_ip = args.m
-user_name = args.u
-user_pass = args.p
+mvip_ip = args.sm
+user_name = args.su
+user_pass = args.sp
 vol_name = args.v
 vol_acct = args.i
 vol_size = args.s
