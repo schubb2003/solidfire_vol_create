@@ -8,7 +8,7 @@ import argparse
 import re
 
 def connect_src():
-    print("Source connect called")
+    print("-----Source connect called-----")
     argv = parse_inputs()
     src_mvip = argv.sm
     src_user = argv.su
@@ -21,7 +21,7 @@ def connect_src():
                                     print_ascii_art=False)
 
 def connect_dst():
-    print("Destination connect called")
+    print("-----Destination connect called-----")
     argv = parse_inputs()
     dst_mvip = argv.dm
     dst_user = argv.du
@@ -39,7 +39,7 @@ def create_src_vol(new_vol, vol_acct, vol_size, vol_512e):
     This function creates the source volumes from the arguments supplied
     outputs src_vol_id for use in pairing functions
     """
-    print("Create source vol called")
+    print("-----Create source vol called-----")
     src_vol = sfe_src.create_volume(new_vol,
                                     account_id=vol_acct,
                                     total_size=vol_size,
@@ -55,7 +55,7 @@ def create_dst_vol(new_vol, vol_acct, vol_size, vol_512e):
     This function creates the destination volumes from the arguments supplied
     outputs dst_vol_id for use in pairing functions
     """
-    print("Create destination vol called")
+    print("-----Create destination vol called-----")
     dst_vol = sfe_dst.create_volume(new_vol,
                                     account_id=vol_acct,
                                     total_size=vol_size,
@@ -68,7 +68,7 @@ def modify_dest_vol(dst_vol_id):
     This function sets the destination volumes to replicationTarget for
         replication.  It cannot be set until the pairing is configured.
      """
-    print("Modify destination vol called")
+    print("-----Modify destination vol called-----")
     sfe_dst.modify_volume(dst_vol_id,
                           access="replicationTarget")
 
@@ -79,7 +79,7 @@ def start_pair_vols(src_vol_id, vol_repl):
     It configures the source and sets the pairing key to the
         variable pair_key for use in the complete_pair_vols function
     """
-    print("Create pair vol called")
+    print("-----Create pair vol called-----")
     key = sfe_src.start_volume_pairing(src_vol_id,
                                        mode=vol_repl)
     global pair_key
@@ -89,7 +89,7 @@ def complete_pair_vols(pair_key, dst_vol_id):
     """
     This function completes the pairing process
     """
-    print("Complete pair vol called")
+    print("-----Complete pair vol called-----")
     sfe_dst.complete_volume_pairing(pair_key,
                                     dst_vol_id)
 
@@ -100,7 +100,7 @@ def remove_vol_pair(src_vol_id):
     When a DBVersion mismatch is detected attempting to re-pair will not work
     Therefore we have to remove the pair on the source and attempt again.
     """
-    print("remove pair vol called")
+    print("-----remove pair vol called-----")
     sfe_src.remove_volume_pair(src_vol_id)
 
 
@@ -113,8 +113,8 @@ def check_repl_status():
         state that can take up to 60 seconds per side to stabilize and
         for transfer operations to start.
     """
-    print("Check repl status called")
-    vols = sfe_src.list_active_paired_volumes(sfe_src)
+    print("-----Check repl status called-----")
+    vols = sfe_src.list_active_paired_volumes()
     status = []
     t = 0
     bad_state = "PausedMisconfigured"
@@ -142,9 +142,13 @@ def enforceVolNaming(vol_name):
     try:
         return re.match("^[a-zA-Z1-9][a-zA-Z1-9-]{1,62}$", vol_name).group(0)
     except:
-        raise argparse.ArgumentTypeError("\nString {} does not match required format, ensure there are no special characters,"
-                                         " that it is between 1 and 64 characters in length, and that no '-' exists at the start"
-                                         " or end of the volume".format(vol_name,))
+        raise argparse.ArgumentTypeError("\nVolume {} does not match required"
+                                         " name format, ensure there are "
+                                         "no special characters,"
+                                         " that it is between 1 and 64 "
+                                         "characters in length, and that no "
+                                         "'-' exists at the start"
+                                         " of the volume".format(vol_name,))
 
 def parse_inputs():
     parser = argparse.ArgumentParser()
@@ -230,7 +234,7 @@ def main():
 
     try:
         i = 1
-        while i < vol_count:
+        while i < vol_count + 1:
             new_vol = vol_name + str(i)
 
             create_src_vol(new_vol, vol_acct, vol_size, vol_512e)
