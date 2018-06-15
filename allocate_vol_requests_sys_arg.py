@@ -18,16 +18,16 @@ from solidfire.models import QoS
 if len(sys.argv) < 11:
     print("Insufficient arguments entered:\n"
           "Usage: python <script> <cluster> <username> <password>"
-          "<volume_name> <account_id> <volume_size> <enable512emulation true|false>"
+          "<volume_name> <account_id> <volume_size> <vol_512emulation true|false>"
           "<min_QoS> <max_QoS> <burst_QoS>")
 
-mvip_ip = sys.argv[1]
-user_name = sys.argv[2]
-user_pass = sys.argv[3]
+src_mvip = sys.argv[1]
+src_user = sys.argv[2]
+src_pass = sys.argv[3]
 vol_name = sys.argv[4]
-acct_id = sys.argv[5]
+vol_acct = sys.argv[5]
 vol_size = sys.argv[6]
-enable512e = (sys.argv[7]).lower()
+vol_512e = (sys.argv[7]).lower()
 min_qos = sys.argv[8]
 max_qos = sys.argv[9]
 burst_qos = sys.argv[10]
@@ -40,7 +40,7 @@ def main():
     if vol_size < 1000000000 or vol_size > 8796093022208:
         sys.exit("volume size is either less than 1GB or more than 8TiB")
 
-    if enable512e != "true" and enable512e != "false":
+    if vol_512e != "true" and vol_512e != "false":
         sys.exit("512 emulation must be either true or false")
 
     try:
@@ -66,7 +66,7 @@ def main():
               "Current QoS is set to %s" % burst_qos)
         
     # Web/REST auth credentials build authentication
-    auth = (user_name + ":" + user_pass)
+    auth = (src_user + ":" + src_pass)
     encodeKey = base64.b64encode(auth.encode('utf-8'))
     basicAuth = bytes.decode(encodeKey)
 
@@ -77,13 +77,13 @@ def main():
         }
 
     # Be certain of your API version path here
-    url = "https://" + mvip_ip + "/json-rpc/9.0"
+    url = "https://" + src_mvip + "/json-rpc/9.0"
 
     # Various payload params in one liner
     # payload = "{\r    \"method\": \"CreateVolume\",\r    
     #               \"params\": {\r        \"name\": \"<Volume Name>\",\r        
     #               \"accountID\": <Account ID>,\r        \"totalSize\": <Volume Size in Bytes>,\r        
-    #               \"enable512e\": <Optional Boolean true or false>,\r        \"attributes\": {},\r        
+    #               \"vol_512e\": <Optional Boolean true or false>,\r        \"attributes\": {},\r        
     #               \"qos\": {\r            \"minIOPS\": <Optional Minimum IOPS>,\r        
     #               \"maxIOPS\": <Optional Maximum IOPS>,\r            \"burstIOPS\": <Optional Burst IOPS>,\r        
     #               \"burstTime\": 60\r        }\r    },\r    \"id\": 1\r}"
@@ -92,9 +92,9 @@ def main():
                     "\n  \"method\": \"CreateVolume\"," + \
                     "\n    \"params\": {" + \
                     "\n    \t\"name\": \"" + str(vol_name) + "\"," + \
-                    "\n    \t\"accountID\": \"" + str(acct_id) + "\"," + \
+                    "\n    \t\"accountID\": \"" + str(vol_acct) + "\"," + \
                     "\n    \t\"totalSize\": " + str(vol_size) + "," + \
-                    "\n    \t\"enable512e\": \"" + str(enable512e) + "\"," + \
+                    "\n    \t\"vol_512e\": \"" + str(vol_512e) + "\"," + \
                     "\n    \t\"attributes\": {}," + \
                     "\n    \t\"qos\": {" + \
                     "\n    \t    \"minIOPS\": " + str(min_qos) + "," + \
@@ -112,5 +112,5 @@ def main():
 
     print(json.dumps(raw, indent=4, sort_keys=True))
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     main()

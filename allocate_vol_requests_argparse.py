@@ -71,9 +71,9 @@ parser.add_argument('-b', type=int,
                     help='burst QoS, between max and 200,000')
 args = parser.parse_args()
 
-mvip_ip = args.sm
-user_name = args.su
-user_pass = args.sp
+src_mvip = args.sm
+src_user = args.su
+src_pass = args.sp
 vol_name = args.v
 vol_acct = args.i
 vol_size = args.s
@@ -100,7 +100,7 @@ def main():
               "Current QoS is set to %s" % burst_qos)
         
     # Web/REST auth credentials build authentication
-    auth = (user_name + ":" + user_pass)
+    auth = (src_user + ":" + src_pass)
     encodeKey = base64.b64encode(auth.encode('utf-8'))
     basicAuth = bytes.decode(encodeKey)
 
@@ -111,7 +111,7 @@ def main():
         }
 
     # Be certain of your API version path here
-    url = "https://" + mvip_ip + "/json-rpc/9.0"
+    url = "https://" + src_mvip + "/json-rpc/9.0"
 
     # Various payload params in one liner
     # payload = "{\r    \"method\": \"CreateVolume\",\r    
@@ -146,5 +146,5 @@ def main():
 
     print(json.dumps(raw, indent=4, sort_keys=True))
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     main()

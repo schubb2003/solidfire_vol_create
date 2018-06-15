@@ -35,5 +35,5 @@ def main():
                                              enable512e=False,
                                              qos=qos)
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     main()
