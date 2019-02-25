@@ -15,6 +15,7 @@
 import sys
 import argparse
 import datetime
+import re
 from solidfire.factory import ElementFactory
 from solidfire.models import QoS
 
@@ -32,7 +33,7 @@ def enforceVolNaming(vol_name):
     except:
         raise argparse.ArgumentTypeError("\nString {} does not match required format, ensure there are no special characters,"
                                          " that it is between 1 and 64 characters in length, and that no '-' exists at the start"
-                                         " or end of the volume".format(vol_name,))
+                                         " or end of the volume".format(vol_name))
 
 # Set vars for connectivity using argparse
 parser = argparse.ArgumentParser()
